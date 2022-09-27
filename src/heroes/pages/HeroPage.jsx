@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { getHerobyid } from '../helpers';
 
@@ -5,7 +6,7 @@ export const HeroPage = () => {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const hero = getHerobyid(id);
+  const hero = useMemo(() => getHerobyid(id), [id]);
 
   const onNavigateBack = () => {
     navigate(`${hero.publisher === 'DC Comics' ? '/dc' : '/marvel'}`);
