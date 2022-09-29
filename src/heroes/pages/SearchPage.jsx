@@ -10,8 +10,11 @@ export const SearchPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {q = ''} = queryString.parse(location.search);
-  const heroes = getHeroesByName(q)
+  const { q = '' } = queryString.parse(location.search);
+  const heroes = getHeroesByName(q);
+
+  const showSearch = (q.length === 0)
+  const showErro = (q.length > 0) && heroes.length === 0
 
   const { searchText, onInputChange } = useForm({
     searchText: q,
@@ -19,10 +22,10 @@ export const SearchPage = () => {
 
   const onSearchSubmit = (e) => {
     e.preventDefault();
-    if (searchText.trim().length <= 1) return;
+    // if (searchText.trim().length <= 1) return;
 
-    const params = searchText.toLowerCase().trim();
-    navigate(`?q=${params}`);
+    // const params = searchText.toLowerCase().trim();
+    navigate(`?q=${searchText}`);
   };
 
   return (
@@ -54,16 +57,29 @@ export const SearchPage = () => {
           <h4>Results</h4>
           <hr />
 
-          <div className="alert alert-success">Search a hero</div>
+          {/* {
+            (q === '')
+              ? <div className="alert alert-success">Search a hero</div>
+              : (heroes.length === 0) && <div className="alert alert-danger"> No hero with <strong>{q}</strong></div>
+          } */}
 
-          <div className="alert alert-danger">
+          <div
+            className="alert alert-success animate__animated animate__fadeIn"
+            style={{ display: showSearch ? '' : 'none' }}
+          >
+            Search a hero
+          </div>
+
+          <div
+            className="alert alert-danger animate__animated animate__fadeIn"
+            style={{ display: showErro ? '' : 'none' }}
+          >
             No hero with <strong>{q}</strong>
           </div>
-          {
-            heroes.map(hero => (
-              <HeroCard key={hero.id} {...hero} />
-            ))
-          }
+
+          {heroes.map((hero) => (
+            <HeroCard key={hero.id} {...hero} />
+          ))}
         </div>
       </div>
     </>
